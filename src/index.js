@@ -5,35 +5,46 @@ import { render } from "react-dom";
 import { Canvas, extend } from "react-three-fiber";
 
 import textureAsset from "../assets/texture.jpg";
-import buildingGLB from "../assets/models/building.glb";
+
 import loadGLTFAsync from "./utils/loadGLTFAsync";
 import Scene from "./components/Scene";
 import * as resources from "./resources/index";
 
 extend(resources);
 
+const promises = [
+  loadGLTFAsync(require("../assets/models/building_1.glb")),
+  loadGLTFAsync(require("../assets/models/building_2.glb")),
+  loadGLTFAsync(require("../assets/models/building_3.glb")),
+  loadGLTFAsync(require("../assets/models/building_4.glb"))
+];
+
 const App = () => {
-  const [building, setBuilding] = useState(null);
+  const [buildings, setBuildings] = useState([]);
 
   const texture = useMemo(() => new THREE.TextureLoader().load(textureAsset), [
     textureAsset
   ]);
 
   useEffect(() => {
-    const fetchModel = async () => {
-      const {
-        scene: { children }
-      } = await loadGLTFAsync(buildingGLB);
+    const fetchModels = async () => {
+      const res = await Promise.all(promises);
 
-      setBuilding(children[0]);
+      const sceneChildren = res.map(({ scene: { children } }) => children[0]);
+
+      setBuildings(sceneChildren);
     };
 
-    fetchModel();
+    fetchModels();
   }, []);
 
   return (
     <Canvas>
-      <Scene texture={texture} building={building} />
+      <Scene
+        texture={texture}
+        buildings={buildings}
+        totalBuildings={promises.length}
+      />
     </Canvas>
   );
 };
