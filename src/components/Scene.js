@@ -1,38 +1,59 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useRender, useThree } from "react-three-fiber";
 import * as THREE from "three/src/Three";
 
 const Scene = ({ building, texture }) => {
   const container = useRef();
-  const { camera } = useThree;
-  console.log(container);
-  useRender(() => {
-    // container.current.rotation.y += 0.01;
-  });
+  const controls = useRef();
+  const camera = useRef();
+  const { size, setDefaultCamera } = useThree();
+
+  useEffect(() => void setDefaultCamera(camera.current), []);
+  useRender(() => controls.current.update());
 
   return (
     <>
-      <ambientLight color="lightblue" />
-      <pointLight color="white" intensity={1} position={[10, 10, 10]} />
-      <object3D ref={container}>
-        <mesh
-          geometry={new THREE.PlaneGeometry(1000, 1000, 250, 250)}
-          position={[0, -100, -750]}
-          rotation={new THREE.Euler(250, 0, 0)}
-        >
-          <meshBasicMaterial attach="material">
-            <primitive attach="map" object={texture} />
-          </meshBasicMaterial>
-        </mesh>
-        {building && (
-          <primitive
-            object={building}
-            scale={new THREE.Vector3(-0.05, -0.05, -0.05)}
-            position={[0, 0, -20]}
-            rotation={new THREE.Euler(250, 0, 0)}
+      <perspectiveCamera
+        ref={camera}
+        aspect={size.width / size.height}
+        radius={(size.width + size.height) / 4}
+        fov={55}
+        position={[0, 0, 40]}
+        onUpdate={self => self.updateProjectionMatrix()}
+      />
+
+      {camera.current && (
+        <>
+          <orbitControls
+            ref={controls}
+            args={[camera.current]}
+            enableDamping
+            dampingFactor={0.1}
+            rotateSpeed={0.1}
           />
-        )}
-      </object3D>
+          <ambientLight color="lightblue" />
+          <pointLight color="white" intensity={1} position={[10, 10, 10]} />
+          {building && texture && (
+            <group ref={container} position={[0, 0, 0]}>
+              <mesh
+                geometry={new THREE.PlaneGeometry(50, 50, 25, 25)}
+                position={[0, 0, 0]}
+                rotation={[THREE.Math.degToRad(-90), 0, 0]}
+              >
+                <meshBasicMaterial attach="material">
+                  <primitive attach="map" object={texture} />
+                </meshBasicMaterial>
+              </mesh>
+              <primitive
+                object={building}
+                scale={new THREE.Vector3(-0.05, -0.05, -0.05)}
+                position={[0, 8, 0]}
+                rotation={new THREE.Euler(0, 0, 0)}
+              />
+            </group>
+          )}
+        </>
+      )}
     </>
   );
 };

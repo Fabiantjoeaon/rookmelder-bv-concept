@@ -2,12 +2,15 @@ import "babel-polyfill";
 import React, { useMemo, useEffect, useState } from "react";
 import * as THREE from "three/src/Three";
 import { render } from "react-dom";
-import { Canvas } from "react-three-fiber";
+import { Canvas, extend } from "react-three-fiber";
 
 import textureAsset from "../assets/texture.jpg";
 import buildingGLB from "../assets/models/building.glb";
 import loadGLTFAsync from "./utils/loadGLTFAsync";
 import Scene from "./components/Scene";
+import * as resources from "./resources/index";
+
+extend(resources);
 
 const App = () => {
   const [building, setBuilding] = useState(null);
