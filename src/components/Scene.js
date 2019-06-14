@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useRender, useThree, useUpdate } from "react-three-fiber";
 import * as THREE from "three/src/Three";
 
@@ -13,6 +13,24 @@ const Scene = ({ buildings, texture, totalBuildings }) => {
   useRender(() => {
     if (controls.current) controls.current.update();
   });
+
+  const wireFrameProps = useMemo(() => {
+    const wireFrameProps = {};
+    buildings.map((building, i) => {
+      wireFrameProps[i] = {};
+      const { children } = building;
+
+      for (const [index, child] of children.entries()) {
+        const shouldBeWireFramed = i === activeBuilding;
+
+        if (child.material)
+          wireFrameProps[i][
+            `children-${index}-material-wireframe`
+          ] = shouldBeWireFramed;
+      }
+    });
+    return wireFrameProps;
+  }, [activeBuilding]);
 
   const buildingAttributeMap = {
     0: {
@@ -69,31 +87,21 @@ const Scene = ({ buildings, texture, totalBuildings }) => {
                 </meshBasicMaterial>
               </mesh>
               {buildings.map((building, i) => {
-                const { children } = building;
                 const { position, rotation, scale } = buildingAttributeMap[i];
 
-                const wireFrameProps = {};
-
-                for (const [index, child] of children.entries()) {
-                  const shouldBeWireFramed = i === activeBuilding;
-                  if (child.material)
-                    wireFrameProps[
-                      `children-${index}-material-wireframe`
-                    ] = shouldBeWireFramed;
-                }
-
-                // TODO: setActiveBuilding()
-
                 return (
-                  <primitive
-                    key={i.toString()}
-                    object={building}
-                    position={position}
-                    rotation={rotation}
-                    scale={scale}
-                    material={null}
-                    {...wireFrameProps}
-                  />
+                  <group key={i.toString()}>
+                    <primitive
+                      object={building}
+                      position={position}
+                      onClick={() => {
+                        setActiveBuilding(0);
+                      }}
+                      rotation={rotation}
+                      scale={scale}
+                      {...wireFrameProps[i]}
+                    />
+                  </group>
                 );
               })}
             </group>
