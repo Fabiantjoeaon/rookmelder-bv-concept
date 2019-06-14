@@ -1,8 +1,19 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { useRender, useThree, useUpdate } from "react-three-fiber";
+import { useRender, useThree } from "react-three-fiber";
 import * as THREE from "three/src/Three";
 
-const Scene = ({ buildings, texture, totalBuildings }) => {
+import createTextSpriteMaterial from "../utils/createTextSpriteMaterial";
+
+const testApartmentNumbers = [
+  { number: 46, position: [0, 5, 4] },
+  { number: 32, position: [0, 5, -4] },
+  { number: 18, position: [2, 7, 4] },
+  { number: 66, position: [-2, 3, 4] },
+  { number: 77, position: [4, 9, 4] },
+  { number: 60, position: [-4, 5, 4] }
+];
+
+const Scene = ({ buildings, mapTexture, markerTexture, totalBuildings }) => {
   const [activeBuilding, setActiveBuilding] = useState(null);
   const container = useRef();
   const controls = useRef();
@@ -35,12 +46,12 @@ const Scene = ({ buildings, texture, totalBuildings }) => {
   const buildingAttributeMap = {
     0: {
       position: [0, 0, 0],
-      scale: [0.05, 0.05, 0.05],
+      scale: [0.013, 0.013, 0.013],
       rotation: [0, 0, 0]
     },
     1: {
       position: [12, 0, 4],
-      scale: [0.01, 0.01, 0.01],
+      scale: [0.05, 0.05, 0.05],
       rotation: [0, 0, 0]
     },
     2: {
@@ -62,7 +73,7 @@ const Scene = ({ buildings, texture, totalBuildings }) => {
         aspect={size.width / size.height}
         radius={(size.width + size.height) / 4}
         fov={55}
-        position={[0, 10, 40]}
+        position={[0, 30, 40]}
         onUpdate={self => self.updateProjectionMatrix()}
       />
       {camera.current && (
@@ -76,14 +87,14 @@ const Scene = ({ buildings, texture, totalBuildings }) => {
           />
           <ambientLight color="lightblue" />
           <pointLight color="white" intensity={1} position={[10, 10, 10]} />
-          {buildings.length === totalBuildings && texture && (
+          {buildings.length === totalBuildings && mapTexture && (
             <group ref={container}>
               <mesh
                 geometry={new THREE.PlaneGeometry(50, 50, 25, 25)}
                 rotation={[THREE.Math.degToRad(-90), 0, 0]}
               >
                 <meshBasicMaterial attach="material">
-                  <primitive attach="map" object={texture} />
+                  <primitive attach="map" object={mapTexture} />
                 </meshBasicMaterial>
               </mesh>
               {buildings.map((building, i) => {
@@ -91,6 +102,20 @@ const Scene = ({ buildings, texture, totalBuildings }) => {
 
                 return (
                   <group key={i.toString()}>
+                    {activeBuilding === i && (
+                      <group>
+                        {testApartmentNumbers.map(({ position, number }) => (
+                          <sprite position={position}>
+                            <spriteMaterial
+                              attach="material"
+                              map={createTextSpriteMaterial(number.toString(), {
+                                fontsize: 160
+                              })}
+                            />
+                          </sprite>
+                        ))}
+                      </group>
+                    )}
                     <primitive
                       object={building}
                       position={position}
@@ -101,6 +126,11 @@ const Scene = ({ buildings, texture, totalBuildings }) => {
                       scale={scale}
                       {...wireFrameProps[i]}
                     />
+                    {markerTexture && (
+                      <sprite position={[0, 5, 3]}>
+                        <spriteMaterial attach="material" map={markerTexture} />
+                      </sprite>
+                    )}
                   </group>
                 );
               })}

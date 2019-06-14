@@ -4,7 +4,8 @@ import * as THREE from "three/src/Three";
 import { render } from "react-dom";
 import { Canvas, extend } from "react-three-fiber";
 
-import textureAsset from "../assets/texture.jpg";
+import mapTextureAsset from "../assets/texture.jpg";
+import markerTextureAsset from "../assets/marker.png";
 
 import loadGLTFAsync from "./utils/loadGLTFAsync";
 import Scene from "./components/Scene";
@@ -22,9 +23,14 @@ const promises = [
 const App = () => {
   const [buildings, setBuildings] = useState([]);
 
-  const texture = useMemo(() => new THREE.TextureLoader().load(textureAsset), [
-    textureAsset
-  ]);
+  const mapTexture = useMemo(
+    () => new THREE.TextureLoader().load(mapTextureAsset),
+    [mapTextureAsset]
+  );
+  const markerTexture = useMemo(
+    () => new THREE.TextureLoader().load(markerTextureAsset),
+    [markerTextureAsset]
+  );
 
   useEffect(() => {
     const fetchModels = async () => {
@@ -41,7 +47,8 @@ const App = () => {
   return (
     <Canvas>
       <Scene
-        texture={texture}
+        mapTexture={mapTexture}
+        markerTexture={markerTexture}
         buildings={buildings}
         totalBuildings={promises.length}
       />
