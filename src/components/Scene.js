@@ -5,12 +5,12 @@ import * as THREE from "three/src/Three";
 import createTextSpriteMaterial from "../utils/createTextSpriteMaterial";
 
 const testApartmentNumbers = [
-  { number: 46, position: [0, 5, 4] },
+  { number: 46, position: [0, 4, 3] },
   { number: 32, position: [0, 5, -4] },
-  { number: 18, position: [2, 7, 4] },
-  { number: 66, position: [-2, 3, 4] },
+  { number: 18, position: [2, 2, 4] },
+  { number: 66, position: [-2, 5, 4] },
   { number: 77, position: [4, 9, 4] },
-  { number: 60, position: [-4, 5, 4] }
+  { number: 60, position: [0, 5, 3] }
 ];
 
 const Scene = ({ buildings, mapTexture, markerTexture, totalBuildings }) => {
