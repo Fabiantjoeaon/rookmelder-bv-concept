@@ -1,34 +1,39 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import GoogleMapReact from "google-map-react";
 
-import markerTextureAsset from "../../../assets/marker.png";
+import Header from "./Header";
+import Map from "./Map";
 
-class Map extends Component {
+class InfoBlock extends Component {
   render() {
     return (
-      <MapContainer>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: "AIzaSyBfmfDu8Ipp27EmM40sMJY14-De-muqDzo" }}
-          defaultCenter={{
-            lat: 51.91791,
-            lng: 4.48777
-          }}
-          defaultZoom={16}
-        >
-          <Marker src={markerTextureAsset} lat={51.91791} lng={4.48777} />
-        </GoogleMapReact>
-      </MapContainer>
+      <InformationContainer>
+        <AdressContainer>
+          <Title>Adres:</Title>
+          <Text>Wijnhaven 107</Text>
+        </AdressContainer>
+        <BuildingInformationContainer>
+          <Title size={15}>
+            Etages: <Text>7</Text>
+          </Title>
+          <Title size={15}>
+            Personenliften: <Text>4</Text>
+          </Title>
+          <Title size={15}>
+            Brandliften: <Text>3</Text>
+          </Title>
+          <Title size={15}>
+            Watertoevoer: <Text>3</Text>
+          </Title>
+          <Title size={15}>
+            Nooduitgang: <Text>8</Text>
+          </Title>
+        </BuildingInformationContainer>
+        <Button onClick={() => console.log("navigating")}>3D tekening</Button>
+      </InformationContainer>
     );
   }
 }
-
-const MapContainer = styled.div`
-  width: 100vw;
-  height: calc(100vh - 75px);
-  display: flex;
-  flex-direction: column;
-`;
 
 const InformationContainer = styled.div`
   position: absolute;
@@ -73,8 +78,4 @@ const Button = styled.button`
   border: none;
 `;
 
-const Marker = styled.img`
-  width: 20px;
-`;
-
-export default Map;
+export default InfoBlock;

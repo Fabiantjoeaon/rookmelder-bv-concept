@@ -48,17 +48,17 @@ const App = () => {
   }, []);
 
   return (
-    <Container>
+    <>
       <UI />
-      <Canvas>
-        <Scene
-          mapTexture={mapTexture}
-          markerTexture={markerTexture}
-          buildings={buildings}
-          totalBuildings={promises.length}
-        />
-      </Canvas>
-    </Container>
+    </>
+    // <Canvas>
+    //   <Scene
+    //     mapTexture={mapTexture}
+    //     markerTexture={markerTexture}
+    //     buildings={buildings}
+    //     totalBuildings={promises.length}
+    //   />
+    // </Canvas>
   );
 };
 

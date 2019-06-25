@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Header from "./Header";
 import Map from "./Map";
+import Info from "./Info";
 
 class UI extends Component {
   render() {
@@ -10,6 +11,7 @@ class UI extends Component {
       <Container>
         <Header />
         <Map />
+        <Info />
       </Container>
     );
   }
