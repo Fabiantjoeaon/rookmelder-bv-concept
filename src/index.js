@@ -3,6 +3,7 @@ import React, { useMemo, useEffect, useState } from "react";
 import * as THREE from "three/src/Three";
 import { render } from "react-dom";
 import { Canvas, extend } from "react-three-fiber";
+import styled from "styled-components";
 
 import mapTextureAsset from "../assets/texture.jpg";
 import markerTextureAsset from "../assets/marker.png";
@@ -10,6 +11,8 @@ import markerTextureAsset from "../assets/marker.png";
 import loadGLTFAsync from "./utils/loadGLTFAsync";
 import Scene from "./components/Scene";
 import * as resources from "./resources/index";
+
+import UI from "./components/UI";
 
 extend(resources);
 
@@ -45,15 +48,22 @@ const App = () => {
   }, []);
 
   return (
-    <Canvas>
-      <Scene
-        mapTexture={mapTexture}
-        markerTexture={markerTexture}
-        buildings={buildings}
-        totalBuildings={promises.length}
-      />
-    </Canvas>
+    <Container>
+      <UI />
+      <Canvas>
+        <Scene
+          mapTexture={mapTexture}
+          markerTexture={markerTexture}
+          buildings={buildings}
+          totalBuildings={promises.length}
+        />
+      </Canvas>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  position: relative;
+`;
 
 render(<App />, document.getElementById("root"));
