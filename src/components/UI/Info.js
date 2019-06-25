@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-
-import Header from "./Header";
-import Map from "./Map";
+import { Link } from "react-router-dom";
 
 class InfoBlock extends Component {
   render() {
+    const { showButton } = this.props;
     return (
       <InformationContainer>
         <AdressContainer>
@@ -29,7 +28,11 @@ class InfoBlock extends Component {
             Nooduitgang: <Text>8</Text>
           </Title>
         </BuildingInformationContainer>
-        <Button onClick={() => console.log("navigating")}>3D tekening</Button>
+        {showButton && (
+          <Link to="/building">
+            <Button>3D tekening</Button>
+          </Link>
+        )}
       </InformationContainer>
     );
   }
@@ -43,6 +46,7 @@ const InformationContainer = styled.div`
   background-color: #03187e;
   justify-content: center;
   align-items: center;
+  z-index: 1;
   right: 100px;
   top: 200px;
 `;

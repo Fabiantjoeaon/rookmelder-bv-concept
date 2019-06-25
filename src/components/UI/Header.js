@@ -1,17 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import logo from "../../../assets/logo.png";
 
-class Header extends Component {
-  render() {
-    return (
-      <HeaderContainer>
-        <Logo src={logo} />
-      </HeaderContainer>
-    );
-  }
-}
+export default () => (
+  <HeaderContainer>
+    <Logo src={logo} />
+  </HeaderContainer>
+);
 
 const HeaderContainer = styled.div`
   background-color: #03187e;
@@ -27,5 +23,3 @@ const Logo = styled.img`
   width: 250px;
   height: 50px;
 `;
-
-export default Header;

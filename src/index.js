@@ -1,5 +1,6 @@
 import "babel-polyfill";
 import React, { useMemo, useEffect, useState } from "react";
+import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import * as THREE from "three/src/Three";
 import { render } from "react-dom";
 import { Canvas, extend } from "react-three-fiber";
@@ -13,6 +14,8 @@ import Scene from "./components/Scene";
 import * as resources from "./resources/index";
 
 import UI from "./components/UI";
+import Header from "./components/UI/Header";
+import Info from "./components/UI/Info";
 
 extend(resources);
 
@@ -49,18 +52,35 @@ const App = () => {
 
   return (
     <>
-      <UI />
+      <Header />
+      <Router>
+        <Switch>
+          <Route
+            path="/building"
+            render={() => (
+              <Container>
+                <Info />
+                <StyledCanvas>
+                  <Scene
+                    mapTexture={mapTexture}
+                    markerTexture={markerTexture}
+                    buildings={buildings}
+                    totalBuildings={promises.length}
+                  />
+                </StyledCanvas>
+              </Container>
+            )}
+          />
+          <Route path="*" component={UI} />
+        </Switch>
+      </Router>
     </>
-    // <Canvas>
-    //   <Scene
-    //     mapTexture={mapTexture}
-    //     markerTexture={markerTexture}
-    //     buildings={buildings}
-    //     totalBuildings={promises.length}
-    //   />
-    // </Canvas>
   );
 };
+
+const StyledCanvas = styled(Canvas)`
+  height: 100%;
+`;
 
 const Container = styled.div`
   position: relative;

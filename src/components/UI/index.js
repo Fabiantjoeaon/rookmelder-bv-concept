@@ -9,9 +9,8 @@ class UI extends Component {
   render() {
     return (
       <Container>
-        <Header />
         <Map />
-        <Info />
+        <Info showButton />
       </Container>
     );
   }
