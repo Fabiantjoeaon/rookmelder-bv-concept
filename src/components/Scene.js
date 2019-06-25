@@ -10,7 +10,8 @@ const testApartmentNumbers = [
   { number: 18, position: [2, 2, 4] },
   { number: 66, position: [-2, 5, 4] },
   { number: 77, position: [4, 9, 4] },
-  { number: 60, position: [0, 5, 3] }
+  { number: 60, position: [0, 5, 3] },
+  { number: 346, position: [0, 7, -4] }
 ];
 
 const Scene = ({ buildings, mapTexture, markerTexture, totalBuildings }) => {
@@ -42,6 +43,17 @@ const Scene = ({ buildings, mapTexture, markerTexture, totalBuildings }) => {
     });
     return wireFrameProps;
   }, [activeBuilding]);
+
+  const [lineGeo, lineMat] = useMemo(() => {
+    const geo = new THREE.Geometry();
+    geo.vertices.push(new THREE.Vector3(0, 0, 5));
+    geo.vertices.push(new THREE.Vector3(1, 2, 5));
+    geo.vertices.push(new THREE.Vector3(2, 4, 5));
+
+    const mat = new THREE.LineBasicMaterial({ lineWidth: 6, color: 0x0000ff });
+
+    return [geo, mat];
+  });
 
   const buildingAttributeMap = {
     0: {
@@ -126,6 +138,7 @@ const Scene = ({ buildings, mapTexture, markerTexture, totalBuildings }) => {
                       scale={scale}
                       {...wireFrameProps[i]}
                     />
+                    <line geometry={lineGeo} material={lineMat} />
                     {markerTexture && (
                       <sprite position={[0, 5, 3]}>
                         <spriteMaterial attach="material" map={markerTexture} />
